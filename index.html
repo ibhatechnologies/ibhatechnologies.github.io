@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ibha Technologies — CTF Team</title>
+  <meta name="description" content="Competitive CTF team competing internationally across Binary Exploitation, Reverse Engineering, Web, Digital Forensics, and Cryptography." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Hero ─────────────────────────────────────────────────── */
+    .hero {
+      padding: 7rem 0 5rem;
+      position: relative;
+    }
+
+    .hero-grid-line {
+      position: absolute;
+      top: 0; left: 50%; right: 0;
+      height: 100%;
+      border-left: 1px solid var(--border);
+      pointer-events: none;
+      opacity: .4;
+    }
+
+    .hero-eyebrow {
+      font-size: .72rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '//';
+      opacity: .5;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -.02em;
+      margin-bottom: 1.5rem;
+      max-width: 780px;
+      line-height: 1.05;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      max-width: 560px;
+      color: var(--text-dim);
+      font-size: .9rem;
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .65em 1.4em;
+      border-radius: var(--radius);
+      font-family: var(--mono);
+      font-size: .8rem;
+      letter-spacing: .06em;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 700;
+    }
+    .btn-primary:hover { background: var(--accent-dim); opacity: 1; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); opacity: 1; }
+
+    /* ── Stat bar ─────────────────────────────────────────────── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin: 3.5rem 0;
+      overflow: hidden;
+    }
+
+    .stat {
+      padding: 1.75rem 2rem;
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: 2.2rem;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: .3rem;
+    }
+
+    .stat-num span { color: var(--accent); }
+
+    .stat-label {
+      font-size: .7rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    /* ── Disciplines ──────────────────────────────────────────── */
+    .disciplines {
+      padding: 3rem 0;
+    }
+
+    .disc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+
+    .disc-card {
+      background: var(--surface);
+      padding: 1.75rem;
+      transition: background .2s;
+    }
+
+    .disc-card:hover { background: #141920; }
+
+    .disc-icon {
+      font-size: 1.4rem;
+      margin-bottom: .75rem;
+    }
+
+    .disc-name {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: .95rem;
+      color: #fff;
+      margin-bottom: .4rem;
+    }
+
+    .disc-desc {
+      font-size: .75rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ── CTFtime block ────────────────────────────────────────── */
+    .ctftime-section {
+      padding: 3rem 0;
+    }
+
+    .ctftime-block {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 2rem;
+    }
+
+    .ctftime-header {
+      background: var(--surface);
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ctftime-title {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: .9rem;
+      color: var(--text);
+    }
+
+    .ctftime-live-dot {
+      width: 7px; height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: .4rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: .4; transform: scale(.8); }
+    }
+
+    .ctftime-body {
+      padding: 1.75rem;
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* ── CTFtime iframe embed (replace placeholder) ────────────── */
+    /* To embed: replace the .ctftime-placeholder div with:
+       <iframe src="https://ctftime.org/team/YOUR_TEAM_ID"
+               width="100%" height="360" frameborder="0"
+               style="border:none; background:transparent"></iframe>
+       Or use the CTFtime rating widget if available for your team.
+    */
+
+    .ctftime-placeholder {
+      text-align: center;
+      color: var(--text-dim);
+    }
+
+    .ctftime-placeholder .mono-label {
+      font-size: .75rem;
+      letter-spacing: .1em;
+      margin-bottom: .5rem;
+    }
+
+    .ctftime-placeholder .team-id-box {
+      display: inline-block;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: .6em 1.2em;
+      font-size: .8rem;
+      color: var(--accent);
+      margin-top: .5rem;
+    }
+
+    .ctftime-link {
+      margin-top: 1rem;
+    }
+
+    /* ── Recent write-ups preview ─────────────────────────────── */
+    .recent-section {
+      padding: 3rem 0;
+    }
+
+    .recent-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .recent-header h2 {
+      font-size: 1.4rem;
+      color: #fff;
+    }
+
+    .see-all {
+      font-size: .75rem;
+      letter-spacing: .08em;
+      color: var(--accent);
+    }
+
+    .writeup-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .writeup-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.2rem 1.75rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .writeup-row:last-child { border-bottom: none; }
+    .writeup-row:hover { background: #141920; }
+
+    .writeup-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .writeup-title {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: .9rem;
+      color: #fff;
+    }
+
+    .writeup-ctf {
+      font-size: .73rem;
+      color: var(--text-dim);
+    }
+
+    .writeup-date {
+      font-size: .72rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* placeholder rows */
+    .writeup-row.placeholder .writeup-title { color: var(--muted); }
+    .writeup-row.placeholder .tag           { opacity: .35; }
+
+    @media (max-width: 640px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat  { border-bottom: 1px solid var(--border); }
+      .hero h1 { font-size: 2.4rem; }
+      .writeup-row { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ──────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">Ibha<span>.</span>Technologies</a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="writeups.html">Write-Ups</a></li>
+      <li><a href="https://ctftime.org/team/YOUR_TEAM_ID" target="_blank" rel="noopener">CTFtime ↗</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────────────────────── -->
+<div class="page">
+  <section class="hero">
+    <div class="hero-grid-line" aria-hidden="true"></div>
+
+    <p class="hero-eyebrow fade-up">Ibha Technologies — CTF Team</p>
+
+    <h1 class="fade-up">
+      Competing globally.<br>
+      <em>Publishing openly.</em>
+    </h1>
+
+    <p class="hero-sub fade-up">
+      Four-person competitive team entering international CTF competitions across
+      five disciplines. Every challenge we solve gets a full public write-up — 
+      methodology, dead ends, and the final exploit chain.
+    </p>
+
+    <div class="hero-ctas fade-up">
+      <a href="writeups.html" class="btn btn-primary">Read Write-Ups →</a>
+      <a href="https://ctftime.org/team/YOUR_TEAM_ID" target="_blank" rel="noopener" class="btn btn-ghost">CTFtime Profile ↗</a>
+    </div>
+
+    <!-- Stat bar -->
+    <div class="stats fade-up">
+      <div class="stat">
+        <div class="stat-num"><!-- e.g. 12 --><span>—</span></div>
+        <div class="stat-label">Competitions Entered</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num"><span>5</span></div>
+        <div class="stat-label">Disciplines</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num"><span>4</span></div>
+        <div class="stat-label">Team Members</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num"><!-- e.g. 8 --><span>—</span></div>
+        <div class="stat-label">Write-Ups Published</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Disciplines ────────────────────────────────────────── -->
+  <section class="disciplines">
+    <p class="section-label">What we do</p>
+    <div class="disc-grid">
+      <div class="disc-card fade-up">
+        <div class="disc-icon">🔩</div>
+        <div class="disc-name">Binary Exploitation</div>
+        <div class="disc-desc">Memory corruption, heap spray, ROP chains. We find and abuse low-level flaws in compiled software.</div>
+      </div>
+      <div class="disc-card fade-up">
+        <div class="disc-icon">🔬</div>
+        <div class="disc-name">Reverse Engineering</div>
+        <div class="disc-desc">Static and dynamic analysis of unknown binaries, firmware, and obfuscated code.</div>
+      </div>
+      <div class="disc-card fade-up">
+        <div class="disc-icon">🌐</div>
+        <div class="disc-name">Web</div>
+        <div class="disc-desc">Server-side and client-side exploitation — injection, auth bypass, deserialization, and beyond.</div>
+      </div>
+      <div class="disc-card fade-up">
+        <div class="disc-icon">🗂️</div>
+        <div class="disc-name">Digital Forensics</div>
+        <div class="disc-desc">Artifact recovery, memory analysis, disk imaging, and reconstructing attacker timelines.</div>
+      </div>
+      <div class="disc-card fade-up">
+        <div class="disc-icon">🔐</div>
+        <div class="disc-name">Cryptography</div>
+        <div class="disc-desc">Breaking weak implementations, side-channel analysis, and attacking modern cryptographic primitives.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTFtime ────────────────────────────────────────────── -->
+  <section class="ctftime-section">
+    <p class="section-label">Ranking</p>
+    <div class="ctftime-block">
+      <div class="ctftime-header">
+        <span class="ctftime-title">
+          <span class="ctftime-live-dot"></span>
+          CTFtime.org — Live Team Profile
+        </span>
+        <a href="https://ctftime.org/team/YOUR_TEAM_ID" target="_blank" rel="noopener" class="btn btn-ghost" style="padding:.35em .9em; font-size:.72rem;">Open ↗</a>
+      </div>
+      <div class="ctftime-body">
+        <!--
+          ══════════════════════════════════════════════════════════
+          HOW TO EMBED YOUR CTFTIME PROFILE
+          ══════════════════════════════════════════════════════════
+          Option A — Direct iframe (simplest):
+            Replace this comment block with:
+
+            <iframe
+              src="https://ctftime.org/team/YOUR_TEAM_ID"
+              width="100%"
+              height="360"
+              frameborder="0"
+              loading="lazy"
+            ></iframe>
+
+          Option B — Rating widget (if CTFtime provides one for your team):
+            Check https://ctftime.org/team/YOUR_TEAM_ID for an embed code
+            and paste it here.
+
+          Option C — Linked card (minimal, always works):
+            Delete this comment and keep only the .ctftime-placeholder div below.
+          ══════════════════════════════════════════════════════════
+        -->
+        <div class="ctftime-placeholder">
+          <p class="mono-label">Team profile &amp; competition history</p>
+          <div class="team-id-box">ctftime.org/team/<strong>YOUR_TEAM_ID</strong></div>
+          <div class="ctftime-link">
+            <a href="https://ctftime.org/team/YOUR_TEAM_ID" target="_blank" rel="noopener" class="btn btn-ghost">
+              View Full Profile ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Recent Write-Ups preview ───────────────────────────── -->
+  <section class="recent-section">
+    <div class="recent-header">
+      <div>
+        <p class="section-label">Latest</p>
+        <h2>Recent Write-Ups</h2>
+      </div>
+      <a href="writeups.html" class="see-all">All write-ups →</a>
+    </div>
+
+    <div class="writeup-list">
+      <!--
+        ══════════════════════════════════════════════════════════
+        TEMPLATE — copy this block for each recent write-up.
+        Update href, category tag class, title, CTF name & date.
+        Keep 3–4 entries here (most recent). Rest live on writeups.html.
+        ══════════════════════════════════════════════════════════
+
+        <a href="writeups/CHALLENGE-NAME.html" class="writeup-row">
+          <div class="writeup-meta">
+            <span class="tag pwn">Pwn</span>
+            <span class="writeup-title">Challenge Name</span>
+            <span class="writeup-ctf">CTF Event Name</span>
+          </div>
+          <span class="writeup-date">Month YYYY</span>
+        </a>
+
+        Tag classes: pwn | re | web | forensics | crypto
+        ══════════════════════════════════════════════════════════
+      -->
+
+      <!-- Placeholder rows (delete once you add real write-ups) -->
+      <div class="writeup-row placeholder">
+        <div class="writeup-meta">
+          <span class="tag pwn">Pwn</span>
+          <span class="writeup-title">Write-up coming soon…</span>
+          <span class="writeup-ctf">Your next CTF</span>
+        </div>
+        <span class="writeup-date">—</span>
+      </div>
+      <div class="writeup-row placeholder">
+        <div class="writeup-meta">
+          <span class="tag re">RE</span>
+          <span class="writeup-title">Write-up coming soon…</span>
+          <span class="writeup-ctf">Your next CTF</span>
+        </div>
+        <span class="writeup-date">—</span>
+      </div>
+      <div class="writeup-row placeholder">
+        <div class="writeup-meta">
+          <span class="tag crypto">Crypto</span>
+          <span class="writeup-title">Write-up coming soon…</span>
+          <span class="writeup-ctf">Your next CTF</span>
+        </div>
+        <span class="writeup-date">—</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ── Footer ────────────────────────────────────────────────── -->
+<footer>
+  <p>
+    Ibha Technologies &nbsp;·&nbsp;
+    <a href="https://ctftime.org/team/YOUR_TEAM_ID" target="_blank" rel="noopener">CTFtime</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/ibhatechnologies" target="_blank" rel="noopener">GitHub</a>
+    &nbsp;·&nbsp;
+    <a href="https://linkedin.com/company/ibhatechnologies" target="_blank" rel="noopener">LinkedIn</a>
+  </p>
+</footer>
+
+</body>
+</html>
