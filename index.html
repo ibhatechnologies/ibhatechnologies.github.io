@@ -445,42 +445,40 @@
         </span>
         <a href="https://ctftime.org/team/429719" target="_blank" rel="noopener" class="btn btn-ghost" style="padding:.35em .9em; font-size:.72rem;">Open ↗</a>
       </div>
-      <div class="ctftime-body">
-        <!--
-          ══════════════════════════════════════════════════════════
-          HOW TO EMBED YOUR CTFTIME PROFILE
-          ══════════════════════════════════════════════════════════
-          Option A — Direct iframe (simplest):
-            Replace this comment block with:
-
-            <iframe
-              src="https://ctftime.org/team/429719"
-              width="100%"
-              height="360"
-              frameborder="0"
-              loading="lazy"
-            ></iframe>
-
-          Option B — Rating widget (if CTFtime provides one for your team):
-            Check https://ctftime.org/team/429719 for an embed code
-            and paste it here.
-
-          Option C — Linked card (minimal, always works):
-            Delete this comment and keep only the .ctftime-placeholder div below.
-          ══════════════════════════════════════════════════════════
-        -->
-        <div class="ctftime-placeholder">
-          <p class="mono-label">Team profile &amp; competition history</p>
-          <div class="team-id-box">ctftime.org/team/<strong>429719</strong></div>
-          <div class="ctftime-link">
-            <a href="https://ctftime.org/team/429719" target="_blank" rel="noopener" class="btn btn-ghost">
-              View Full Profile ↗
-            </a>
-          </div>
-        </div>
+<div class="ctftime-body" id="ctftimeBody">
+        <p style="color:var(--muted); font-size:.8rem;">Loading CTFtime data…</p>
       </div>
-    </div>
-  </section>
+
+      <script>
+        fetch('https://corsproxy.io/?url=https://ctftime.org/api/v1/teams/429719/')
+          .then(r => r.json())
+          .then(data => {
+            const lastYear = data.rating ? Object.keys(data.rating).sort().slice(-1)[0] : null;
+            const rating   = lastYear ? data.rating[lastYear] : null;
+            document.getElementById('ctftimeBody').innerHTML = `
+              <div style="display:flex; gap:2rem; align-items:center; flex-wrap:wrap; width:100%;">
+                ${data.logo ? `<img src="${data.logo}" alt="Team logo" style="height:64px; border-radius:4px;" />` : ''}
+                <div style="flex:1;">
+                  <p style="font-family:var(--sans); font-size:1.1rem; font-weight:700; color:#fff;">${data.name}</p>
+                  <p style="color:var(--text-dim); font-size:.8rem; margin-top:.25rem;">Country: ${data.country || '—'}</p>
+                  ${rating ? `
+                  <p style="color:var(--accent); font-size:.8rem; margin-top:.4rem;">
+                    ${lastYear} global rank: ${rating.rating_place ? '#' + rating.rating_place : 'Unranked'}
+                    &nbsp;·&nbsp; Rating: ${rating.rating_points ? rating.rating_points.toFixed(2) : '—'}
+                  </p>` : '<p style="color:var(--muted); font-size:.8rem; margin-top:.4rem;">No rating data yet</p>'}
+                </div>
+              </div>
+              <a href="https://ctftime.org/team/429719" target="_blank" rel="noopener"
+                 class="btn btn-ghost" style="margin-top:1.25rem; padding:.35em .9em; font-size:.72rem;">
+                View Full Profile ↗
+              </a>
+            `;
+          })
+          .catch(() => {
+            document.getElementById('ctftimeBody').innerHTML =
+              '<p style="color:var(--muted);font-size:.8rem;">Could not load CTFtime data.</p>';
+          });
+      </script>
 
   <!-- ── Recent Write-Ups preview ───────────────────────────── -->
   <section class="recent-section">
