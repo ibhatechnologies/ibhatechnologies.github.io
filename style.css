@@ -74,6 +74,12 @@ nav {
   letter-spacing: .02em;
 }
 
+.nav-logo-img {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+
 .nav-logo span { color: var(--accent); }
 
 .nav-links {
