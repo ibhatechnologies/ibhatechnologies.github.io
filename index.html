@@ -508,7 +508,7 @@
   }
 
   // ── 2. CTFtime API → competitions stat + team block ───────────
-  fetch('https://corsproxy.io/?url=https://ctftime.org/api/v1/teams/429719/')
+fetch('https://api.allorigins.win/raw?url=https://ctftime.org/api/v1/teams/429719/')
     .then(r => r.json())
     .then(data => {
 // NEW — hit the participations endpoint separately
