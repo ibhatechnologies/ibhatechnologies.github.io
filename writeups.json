@@ -1,1 +1,7 @@
-[]
+{
+  "title": "Prompt Injection in AI-Powered Psychiatric Therapy Bots Marketed as SaMDs",
+  "ctf": "Research Advisory",
+  "category": "web",
+  "date": "2026-03-27",
+  "file": "Writeups/2026-03-samd-ai-therapy-prompt-injection.html"
+}
