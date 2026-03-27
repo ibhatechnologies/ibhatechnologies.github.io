@@ -312,29 +312,84 @@
 </footer>
 
 <script>
-  // ── Category filter ────────────────────────────────────────── //
-  const filterBar = document.getElementById('filterBar');
-  const rows      = document.querySelectorAll('#writeupTable .wt-row');
-  const empty     = document.getElementById('emptyState');
+<script>
+  const filterBar  = document.getElementById('filterBar');
+  const table      = document.getElementById('writeupTable');
+  const empty      = document.getElementById('emptyState');
+  let   activecat  = 'all';
 
-  filterBar.addEventListener('click', e => {
-    const btn = e.target.closest('.filter-btn');
-    if (!btn) return;
+  function renderRows(writeups) {
+    // Remove existing placeholder rows
+    table.querySelectorAll('.wt-row').forEach(el => el.remove());
 
-    filterBar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    if (writeups.length === 0) {
+      // Show placeholder rows since nothing to display yet
+      const cats = ['pwn','re','web','forensics','crypto'];
+      cats.forEach(cat => {
+        const row = document.createElement('div');
+        row.className = 'wt-row placeholder';
+        row.dataset.cat = cat;
+        row.innerHTML = `
+          <span class="wt-challenge">Write-ups coming soon…</span>
+          <span class="wt-event">—</span>
+          <span class="tag ${cat}">${cat.toUpperCase()}</span>
+          <span class="wt-date">—</span>
+        `;
+        table.insertBefore(row, empty);
+      });
+      return;
+    }
 
-    const cat = btn.dataset.cat;
-    let visible = 0;
+    // Sort by date descending
+    const sorted = [...writeups].sort((a, b) => new Date(b.date) - new Date(a.date));
 
+    sorted.forEach(wu => {
+      const dateObj   = new Date(wu.date);
+      const formatted = dateObj.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+      const row       = document.createElement('a');
+      row.href        = wu.file;
+      row.className   = 'wt-row';
+      row.dataset.cat = wu.category;
+      row.innerHTML   = `
+        <span class="wt-challenge">${wu.title}</span>
+        <span class="wt-event">${wu.ctf}</span>
+        <span class="tag ${wu.category}">${wu.category}</span>
+        <span class="wt-date">${formatted}</span>
+      `;
+      table.insertBefore(row, empty);
+    });
+  }
+
+  function applyFilter(cat) {
+    activecat = cat;
+    const rows    = table.querySelectorAll('.wt-row');
+    let   visible = 0;
     rows.forEach(row => {
       const match = cat === 'all' || row.dataset.cat === cat;
       row.style.display = match ? '' : 'none';
       if (match) visible++;
     });
-
     empty.style.display = visible === 0 ? 'flex' : 'none';
+  }
+
+  filterBar.addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    filterBar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilter(btn.dataset.cat);
   });
+
+  // Load write-ups from JSON
+  fetch('writeups.json')
+    .then(r => r.json())
+    .then(writeups => {
+      renderRows(writeups);
+      applyFilter(activecat);
+    })
+    .catch(() => {
+      renderRows([]);
+    });
 </script>
 
 </body>
