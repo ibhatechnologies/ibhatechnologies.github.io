@@ -216,12 +216,45 @@
       50%       { opacity: .4; transform: scale(.8); }
     }
 
-    .ctftime-body {
-      padding: 1.25rem 1.75rem;
-      display: flex;
-      align-items: flex-start;
-      flex-direction: column;
-      gap: .75rem;
+.ctftime-body {
+  padding: 1.25rem 1.75rem;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+    /* ── CTFtime iframe embed (replace placeholder) ────────────── */
+    /* To embed: replace the .ctftime-placeholder div with:
+       <iframe src="https://ctftime.org/team/429719"
+               width="100%" height="360" frameborder="0"
+               style="border:none; background:transparent"></iframe>
+       Or use the CTFtime rating widget if available for your team.
+    */
+
+    .ctftime-placeholder {
+      text-align: center;
+      color: var(--text-dim);
+    }
+
+    .ctftime-placeholder .mono-label {
+      font-size: .75rem;
+      letter-spacing: .1em;
+      margin-bottom: .5rem;
+    }
+
+    .ctftime-placeholder .team-id-box {
+      display: inline-block;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      padding: .6em 1.2em;
+      font-size: .8rem;
+      color: var(--accent);
+      margin-top: .5rem;
+    }
+
+    .ctftime-link {
+      margin-top: 1rem;
     }
 
     /* ── Recent write-ups preview ─────────────────────────────── */
@@ -297,6 +330,7 @@
       white-space: nowrap;
     }
 
+    /* placeholder rows */
     .writeup-row.placeholder .writeup-title { color: var(--muted); }
     .writeup-row.placeholder .tag           { opacity: .35; }
 
@@ -313,9 +347,7 @@
 <!-- ── Nav ──────────────────────────────────────────────────── -->
 <nav>
   <div class="nav-inner">
-    <a class="nav-logo" href="index.html">
-      <img src="Ibha_Capital.png" alt="Ibha Technologies" class="nav-logo-img" />
-    </a>
+    <a class="nav-logo" href="index.html">   <img src="Ibha_Capital.png" alt="Ibha Technologies" class="nav-logo-img" /> </a>
     <ul class="nav-links">
       <li><a href="index.html" class="active">Home</a></li>
       <li><a href="writeups.html">Write-Ups</a></li>
@@ -327,6 +359,8 @@
 <!-- ── Hero ─────────────────────────────────────────────────── -->
 <div class="page">
   <section class="hero">
+    <!-- <div class="hero-grid-line" aria-hidden="true"></div> -->
+
 
     <p class="hero-eyebrow fade-up">Ibha Technologies — Offensive Security Research Team</p>
 
@@ -336,9 +370,9 @@
     </h1>
 
     <p class="hero-sub fade-up">
-      Offensive security research team entering international CTF competitions across
-      five disciplines. Every challenge we solve gets a full public write-up —
-      methodology, dead ends, the final exploit chain and their connection to
+      Offensive security research Team entering international CTF competitions across
+      five disciplines. Every challenge we solve gets a full public write-up — 
+      methodology, dead ends, the final exploit chain and their connection to 
       real-world vulnerabilities and attack surfaces.
     </p>
 
@@ -350,7 +384,7 @@
     <!-- Stat bar -->
     <div class="stats fade-up">
       <div class="stat">
-        <div class="stat-num"><span id="stat-competitions">—</span></div>
+        <div class="stat-num"><!-- e.g. 12 --><span>—</span></div>
         <div class="stat-label">Competitions Entered</div>
       </div>
       <div class="stat">
@@ -362,7 +396,7 @@
         <div class="stat-label">Team Members</div>
       </div>
       <div class="stat">
-        <div class="stat-num"><span id="stat-writeups">—</span></div>
+        <div class="stat-num"><!-- e.g. 8 --><span>—</span></div>
         <div class="stat-label">Write-Ups Published</div>
       </div>
     </div>
@@ -411,12 +445,42 @@
         </span>
         <a href="https://ctftime.org/team/429719" target="_blank" rel="noopener" class="btn btn-ghost" style="padding:.35em .9em; font-size:.72rem;">Open ↗</a>
       </div>
-      <div class="ctftime-body" id="ctftimeBody">
+<div class="ctftime-body" id="ctftimeBody">
         <p style="color:var(--muted); font-size:.8rem;">Loading CTFtime data…</p>
       </div>
-    </div>
-  </section>
 
+      <script>
+        fetch('https://corsproxy.io/?url=https://ctftime.org/api/v1/teams/429719/')
+          .then(r => r.json())
+          .then(data => {
+            const lastYear = data.rating ? Object.keys(data.rating).sort().slice(-1)[0] : null;
+            const rating   = lastYear ? data.rating[lastYear] : null;
+            document.getElementById('ctftimeBody').innerHTML = `
+              <div style="display:flex; gap:2rem; align-items:center; flex-wrap:wrap; width:100%;">
+                ${data.logo ? `<img src="${data.logo}" alt="Team logo" style="height:64px; border-radius:4px;" />` : ''}
+                <div style="flex:1;">
+                  <p style="font-family:var(--sans); font-size:1.1rem; font-weight:700; color:#fff;">${data.name}</p>
+                  <p style="color:var(--text-dim); font-size:.8rem; margin-top:.25rem;">Country: ${data.country || '—'}</p>
+                  ${rating ? `
+                  <p style="color:var(--accent); font-size:.8rem; margin-top:.4rem;">
+                    ${lastYear} global rank: ${rating.rating_place ? '#' + rating.rating_place : 'Unranked'}
+                    &nbsp;·&nbsp; Rating: ${rating.rating_points ? rating.rating_points.toFixed(2) : '—'}
+                  </p>` : '<p style="color:var(--muted); font-size:.8rem; margin-top:.4rem;">No rating data yet</p>'}
+                </div>
+              </div>
+              <a href="https://ctftime.org/team/429719" target="_blank" rel="noopener"
+                 class="btn btn-ghost" style="margin-top:1.25rem; padding:.35em .9em; font-size:.72rem;">
+                View Full Profile ↗
+              </a>
+            `;
+          })
+          .catch(() => {
+            document.getElementById('ctftimeBody').innerHTML =
+              '<p style="color:var(--muted);font-size:.8rem;">Could not load CTFtime data.</p>';
+          });
+      </script>
+    </div>  <!-- end ctftime-block -->
+  </section>
   <!-- ── Recent Write-Ups preview ───────────────────────────── -->
   <section class="recent-section">
     <div class="recent-header">
@@ -426,8 +490,53 @@
       </div>
       <a href="writeups.html" class="see-all">All write-ups →</a>
     </div>
-    <div class="writeup-list" id="recentWriteups">
-      <!-- Populated by JS from writeups.json -->
+
+    <div class="writeup-list">
+      <!--
+        ══════════════════════════════════════════════════════════
+        TEMPLATE — copy this block for each recent write-up.
+        Update href, category tag class, title, CTF name & date.
+        Keep 3–4 entries here (most recent). Rest live on writeups.html.
+        ══════════════════════════════════════════════════════════
+
+        <a href="writeups/CHALLENGE-NAME.html" class="writeup-row">
+          <div class="writeup-meta">
+            <span class="tag pwn">Pwn</span>
+            <span class="writeup-title">Challenge Name</span>
+            <span class="writeup-ctf">CTF Event Name</span>
+          </div>
+          <span class="writeup-date">Month YYYY</span>
+        </a>
+
+        Tag classes: pwn | re | web | forensics | crypto
+        ══════════════════════════════════════════════════════════
+      -->
+
+      <!-- Placeholder rows (delete once you add real write-ups) -->
+      <div class="writeup-row placeholder">
+        <div class="writeup-meta">
+          <span class="tag pwn">Pwn</span>
+          <span class="writeup-title">Write-up coming soon…</span>
+          <span class="writeup-ctf">Your next CTF</span>
+        </div>
+        <span class="writeup-date">—</span>
+      </div>
+      <div class="writeup-row placeholder">
+        <div class="writeup-meta">
+          <span class="tag re">RE</span>
+          <span class="writeup-title">Write-up coming soon…</span>
+          <span class="writeup-ctf">Your next CTF</span>
+        </div>
+        <span class="writeup-date">—</span>
+      </div>
+      <div class="writeup-row placeholder">
+        <div class="writeup-meta">
+          <span class="tag crypto">Crypto</span>
+          <span class="writeup-title">Write-up coming soon…</span>
+          <span class="writeup-ctf">Your next CTF</span>
+        </div>
+        <span class="writeup-date">—</span>
+      </div>
     </div>
   </section>
 </div>
@@ -443,112 +552,6 @@
     <a href="https://linkedin.com/company/ibha-technologies" target="_blank" rel="noopener">LinkedIn</a>
   </p>
 </footer>
-
-<script>
-  // ── 1. writeups.json → stat + recent list ─────────────────────
-  fetch('writeups.json')
-    .then(r => r.json())
-    .then(writeups => {
-      // Write-Ups Published stat
-      document.getElementById('stat-writeups').textContent = writeups.length || '0';
-
-      const container = document.getElementById('recentWriteups');
-
-      if (!writeups.length) {
-        // Placeholder rows while no write-ups exist
-        const placeholders = [
-          { tag: 'pwn',     label: 'Pwn'  },
-          { tag: 're',      label: 'RE'   },
-          { tag: 'crypto',  label: 'Crypto' }
-        ];
-        container.innerHTML = placeholders.map(p => `
-          <div class="writeup-row placeholder">
-            <div class="writeup-meta">
-              <span class="tag ${p.tag}">${p.label}</span>
-              <span class="writeup-title">Write-up coming soon…</span>
-              <span class="writeup-ctf">Your next CTF</span>
-            </div>
-            <span class="writeup-date">—</span>
-          </div>
-        `).join('');
-        return;
-      }
-
-      // Show 3 most recent
-      const recent = [...writeups]
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .slice(0, 3);
-
-      container.innerHTML = recent.map(w => `
-        <a href="${w.file}" class="writeup-row">
-          <div class="writeup-meta">
-            <span class="tag ${w.category}">${w.category.toUpperCase()}</span>
-            <span class="writeup-title">${w.title}</span>
-            <span class="writeup-ctf">${w.ctf}</span>
-          </div>
-          <span class="writeup-date">${formatDate(w.date)}</span>
-        </a>
-      `).join('');
-    })
-    .catch(() => {
-      document.getElementById('stat-writeups').textContent = '0';
-      document.getElementById('recentWriteups').innerHTML = `
-        <div class="writeup-row placeholder">
-          <div class="writeup-meta">
-            <span class="writeup-title" style="color:var(--muted)">Could not load write-ups.</span>
-          </div>
-        </div>`;
-    });
-
-  function formatDate(dateStr) {
-    // expects "YYYY-MM-DD"
-    const [y, m] = dateStr.split('-');
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    return `${months[parseInt(m,10)-1]} ${y}`;
-  }
-
-  // ── 2. CTFtime API → competitions stat + team block ───────────
-fetch('https://api.allorigins.win/raw?url=https://ctftime.org/api/v1/teams/429719/')
-    .then(r => r.json())
-    .then(data => {
-// NEW — hit the participations endpoint separately
-fetch('https://corsproxy.io/?url=https://ctftime.org/api/v1/teams/429719/participations/')
-  .then(r => r.json())
-  .then(participations => {
-    document.getElementById('stat-competitions').textContent = participations.length || '0';
-  })
-  .catch(() => {
-    document.getElementById('stat-competitions').textContent = '0';
-  });
-
-      const lastYear = ratingYears.sort().slice(-1)[0];
-      const rating   = lastYear ? data.rating[lastYear] : null;
-
-      document.getElementById('ctftimeBody').innerHTML = `
-        <div style="display:flex; gap:2rem; align-items:center; flex-wrap:wrap; width:100%;">
-          ${data.logo ? `<img src="${data.logo}" alt="Team logo" style="height:64px; border-radius:4px;" />` : ''}
-          <div style="flex:1;">
-            <p style="font-family:var(--sans); font-size:1.1rem; font-weight:700; color:#fff;">${data.name}</p>
-            <p style="color:var(--text-dim); font-size:.8rem; margin-top:.25rem;">Country: ${data.country || '—'}</p>
-            ${rating ? `
-            <p style="color:var(--accent); font-size:.8rem; margin-top:.4rem;">
-              ${lastYear} global rank: ${rating.rating_place ? '#' + rating.rating_place : 'Unranked'}
-              &nbsp;·&nbsp; Rating: ${rating.rating_points ? rating.rating_points.toFixed(2) : '—'}
-            </p>` : '<p style="color:var(--muted); font-size:.8rem; margin-top:.4rem;">No rating data yet</p>'}
-          </div>
-        </div>
-        <a href="https://ctftime.org/team/429719" target="_blank" rel="noopener"
-           class="btn btn-ghost" style="margin-top:1.25rem; padding:.35em .9em; font-size:.72rem;">
-          View Full Profile ↗
-        </a>
-      `;
-    })
-    .catch(() => {
-      document.getElementById('stat-competitions').textContent = '0';
-      document.getElementById('ctftimeBody').innerHTML =
-        '<p style="color:var(--muted);font-size:.8rem;">Could not load CTFtime data.</p>';
-    });
-</script>
 
 </body>
 </html>
