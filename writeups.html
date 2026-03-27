@@ -1,180 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Write-Ups — Ibha Technologies</title>
-  <meta name="description" content="CTF challenge write-ups by Ibha Technologies covering Binary Exploitation, Reverse Engineering, Web, Digital Forensics, and Cryptography." />
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    /* ── Page header ──────────────────────────────────────────── */
-    .page-header {
-      padding: 5rem 0 3.5rem;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 3rem;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Write-Ups — Ibha Technologies</title>
+<meta name="description" content="CTF challenge write-ups by Ibha Technologies covering Binary Exploitation, Reverse Engineering, Web, Digital Forensics, and Cryptography." />
+<link rel="stylesheet" href="style.css" />
+<style>
+/* ── Page header ──────────────────────────────────────────── */
+.page-header {
+  padding: 5rem 0 3.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 3rem;
+}
+.page-header h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -.02em;
+  margin-bottom: .75rem;
+}
+.page-header p {
+  color: var(--text-dim);
+  max-width: 520px;
+  font-size: .88rem;
+  line-height: 1.8;
+}
 
-    .page-header h1 {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -.02em;
-      margin-bottom: .75rem;
-    }
+/* ── Filter bar ───────────────────────────────────────────── */
+.filter-bar {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+.filter-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: .73rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: .4em .9em;
+  cursor: pointer;
+  transition: all .15s;
+}
+.filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+.filter-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 700; }
 
-    .page-header p {
-      color: var(--text-dim);
-      max-width: 520px;
-      font-size: .88rem;
-      line-height: 1.8;
-    }
+/* ── Writeup table ────────────────────────────────────────── */
+.writeup-table {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.wt-head {
+  display: grid;
+  grid-template-columns: 1fr 160px 120px 100px;
+  gap: 1rem;
+  padding: .85rem 1.75rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  font-size: .68rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.wt-row {
+  display: grid;
+  grid-template-columns: 1fr 160px 120px 100px;
+  gap: 1rem;
+  padding: 1.2rem 1.75rem;
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  background: var(--bg);
+  align-items: center;
+  transition: background .15s;
+}
+.wt-row:last-child { border-bottom: none; }
+.wt-row:hover { background: var(--surface); }
+.wt-challenge {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: .9rem;
+  color: #fff;
+}
+.wt-event {
+  font-size: .78rem;
+  color: var(--text-dim);
+}
+.wt-date {
+  font-size: .75rem;
+  color: var(--muted);
+}
 
-    /* ── Filter bar ───────────────────────────────────────────── */
-    .filter-bar {
-      display: flex;
-      gap: .5rem;
-      flex-wrap: wrap;
-      margin-bottom: 2.5rem;
-    }
+/* ── Empty / loading states ──────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 5rem 1rem;
+  color: var(--muted);
+  display: none;
+}
+.empty-state p {
+  font-size: .82rem;
+  letter-spacing: .06em;
+}
 
-    .filter-btn {
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text-dim);
-      font-family: var(--mono);
-      font-size: .73rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      padding: .4em .9em;
-      cursor: pointer;
-      transition: all .15s;
-    }
+/* ── Individual write-up note ─────────────────────────────── */
+.writeup-note {
+  margin-top: 3rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  background: var(--surface);
+}
+.writeup-note h3 {
+  font-size: .85rem;
+  color: var(--accent);
+  margin-bottom: .75rem;
+  font-family: var(--sans);
+}
+.writeup-note p, .writeup-note li {
+  font-size: .78rem;
+  color: var(--text-dim);
+  line-height: 1.9;
+}
+.writeup-note ul {
+  padding-left: 1.2rem;
+  margin-top: .5rem;
+}
+.writeup-note li + li { margin-top: .25rem; }
+.writeup-note code {
+  background: #1a2030;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: .1em .4em;
+  font-size: .85em;
+  color: var(--accent);
+}
 
-    .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .filter-btn.active { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 700; }
-
-    /* ── Writeup table ────────────────────────────────────────── */
-    .writeup-table {
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-    }
-
-    .wt-head {
-      display: grid;
-      grid-template-columns: 1fr 160px 120px 100px;
-      gap: 1rem;
-      padding: .85rem 1.75rem;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      font-size: .68rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .wt-row {
-      display: grid;
-      grid-template-columns: 1fr 160px 120px 100px;
-      gap: 1rem;
-      padding: 1.2rem 1.75rem;
-      border-bottom: 1px solid var(--border);
-      text-decoration: none;
-      background: var(--bg);
-      align-items: center;
-      transition: background .15s;
-    }
-
-    .wt-row:last-child { border-bottom: none; }
-    .wt-row:hover      { background: var(--surface); }
-
-    .wt-row.placeholder { pointer-events: none; opacity: .5; }
-
-    .wt-challenge {
-      font-family: var(--sans);
-      font-weight: 700;
-      font-size: .9rem;
-      color: #fff;
-    }
-
-    .wt-event {
-      font-size: .78rem;
-      color: var(--text-dim);
-    }
-
-    .wt-date {
-      font-size: .75rem;
-      color: var(--muted);
-    }
-
-    /* ── Empty state ──────────────────────────────────────────── */
-    .empty-state {
-      text-align: center;
-      padding: 5rem 1rem;
-      color: var(--muted);
-      display: none;
-    }
-
-    .empty-state p {
-      font-size: .82rem;
-      letter-spacing: .06em;
-    }
-
-    /* ── Individual write-up note ─────────────────────────────── */
-    .writeup-note {
-      margin-top: 3rem;
-      border: 1px dashed var(--border);
-      border-radius: var(--radius);
-      padding: 1.75rem;
-      background: var(--surface);
-    }
-
-    .writeup-note h3 {
-      font-size: .85rem;
-      color: var(--accent);
-      margin-bottom: .75rem;
-      font-family: var(--sans);
-    }
-
-    .writeup-note p, .writeup-note li {
-      font-size: .78rem;
-      color: var(--text-dim);
-      line-height: 1.9;
-    }
-
-    .writeup-note ul {
-      padding-left: 1.2rem;
-      margin-top: .5rem;
-    }
-
-    .writeup-note li + li { margin-top: .25rem; }
-
-    .writeup-note code {
-      background: #1a2030;
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: .1em .4em;
-      font-size: .85em;
-      color: var(--accent);
-    }
-
-    @media (max-width: 640px) {
-      .wt-head { grid-template-columns: 1fr 90px; }
-      .wt-head .col-event,
-      .wt-head .col-date   { display: none; }
-      .wt-row  { grid-template-columns: 1fr 90px; }
-      .wt-row .wt-event,
-      .wt-row .wt-date     { display: none; }
-    }
-  </style>
+@media (max-width: 640px) {
+  .wt-head { grid-template-columns: 1fr 90px; }
+  .wt-head .col-event,
+  .wt-head .col-date { display: none; }
+  .wt-row { grid-template-columns: 1fr 90px; }
+  .wt-row .wt-event,
+  .wt-row .wt-date { display: none; }
+}
+</style>
 </head>
 <body>
 
 <!-- ── Nav ──────────────────────────────────────────────────── -->
 <nav>
   <div class="nav-inner">
-    <a class="nav-logo" href="index.html">   <img src="Ibha_Capital.png" alt="Ibha Technologies" class="nav-logo-img" /> </a>
+    <a class="nav-logo" href="index.html">
+      <img src="Ibha_Capital.png" alt="Ibha Technologies" class="nav-logo-img" />
+    </a>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="writeups.html" class="active">Write-Ups</a></li>
@@ -208,92 +192,34 @@
 
   <!-- ── Write-up table ───────────────────────────────────────── -->
   <div class="writeup-table" id="writeupTable">
-
     <div class="wt-head">
       <span>Challenge</span>
       <span class="col-event">Event</span>
       <span>Category</span>
       <span class="col-date">Date</span>
     </div>
-
-    <!--
-      ════════════════════════════════════════════════════════════
-      HOW TO ADD A WRITE-UP ROW
-      ════════════════════════════════════════════════════════════
-      1. Copy the template block below.
-      2. Set href to your write-up file path, e.g.:
-           href="writeups/2025-03-picoctf-challenge-name.html"
-      3. Fill in: challenge name, event name, date (Mon YYYY).
-      4. Set the correct data-cat attribute (pwn / re / web / forensics / crypto).
-      5. Set the correct <span class="tag ..."> class to match data-cat.
-      6. Delete the placeholder rows once you have real entries.
-
-      TEMPLATE:
-      ─────────────────────────────────────────────────────────────
-      <a href="writeups/FILENAME.html" class="wt-row" data-cat="pwn">
-        <span class="wt-challenge">Challenge Name</span>
-        <span class="wt-event">CTF Event Name</span>
-        <span class="tag pwn">Pwn</span>
-        <span class="wt-date">Mon YYYY</span>
-      </a>
-      ─────────────────────────────────────────────────────────────
-      Tag classes available: pwn | re | web | forensics | crypto
-      ════════════════════════════════════════════════════════════
-    -->
-
-    <!-- Placeholder rows — delete when real write-ups are added -->
-    <div class="wt-row placeholder" data-cat="pwn">
-      <span class="wt-challenge">Write-ups coming soon…</span>
-      <span class="wt-event">—</span>
-      <span class="tag pwn">Pwn</span>
-      <span class="wt-date">—</span>
+    <div id="writeupRows">
+      <!-- Rows injected dynamically from Writeups/index.json -->
     </div>
-    <div class="wt-row placeholder" data-cat="re">
-      <span class="wt-challenge">Write-ups coming soon…</span>
-      <span class="wt-event">—</span>
-      <span class="tag re">RE</span>
-      <span class="wt-date">—</span>
-    </div>
-    <div class="wt-row placeholder" data-cat="web">
-      <span class="wt-challenge">Write-ups coming soon…</span>
-      <span class="wt-event">—</span>
-      <span class="tag web">Web</span>
-      <span class="wt-date">—</span>
-    </div>
-    <div class="wt-row placeholder" data-cat="forensics">
-      <span class="wt-challenge">Write-ups coming soon…</span>
-      <span class="wt-event">—</span>
-      <span class="tag forensics">Forensics</span>
-      <span class="wt-date">—</span>
-    </div>
-    <div class="wt-row placeholder" data-cat="crypto">
-      <span class="wt-challenge">Write-ups coming soon…</span>
-      <span class="wt-event">—</span>
-      <span class="tag crypto">Crypto</span>
-      <span class="wt-date">—</span>
-    </div>
-
     <div class="empty-state" id="emptyState">
       <p>No write-ups in this category yet.</p>
     </div>
-
   </div>
 
   <!-- ── Write-up file format guide ───────────────────────────── -->
   <div class="writeup-note fade-up">
     <h3>// Write-up file format</h3>
     <p>
-      Each write-up lives in a <code>writeups/</code> subfolder as its own HTML file.
+      Each write-up lives in a <code>Writeups/</code> subfolder as its own HTML file.
       Recommended naming: <code>YYYY-MM-CTFNAME-challenge-name.html</code>
     </p>
-    <p style="margin-top:.75rem;">Suggested write-up structure:</p>
+    <p style="margin-top:.75rem;">To add a new write-up, add an entry to <code>Writeups/index.json</code>:</p>
     <ul>
-      <li><strong>Challenge overview</strong> — description, category, points, CTF event</li>
-      <li><strong>Initial recon</strong> — what you observed first, tools used</li>
-      <li><strong>Dead ends</strong> — approaches that didn't work and why (this is what separates a good write-up from a great one)</li>
-      <li><strong>The solution</strong> — step-by-step exploit or methodology with code snippets</li>
-      <li><strong>Key takeaway</strong> — one thing worth remembering</li>
-      <li><strong>Flag</strong> — redact if required by the organizer</li>
+      <li><strong>title</strong> — challenge name shown in the table</li>
+      <li><strong>event</strong> — CTF event name</li>
+      <li><strong>category</strong> — one of: <code>pwn</code> / <code>re</code> / <code>web</code> / <code>forensics</code> / <code>crypto</code></li>
+      <li><strong>date</strong> — e.g. <code>Mar 2026</code></li>
+      <li><strong>file</strong> — path relative to root, e.g. <code>Writeups/2026-03-ctf-challenge.html</code></li>
     </ul>
   </div>
 
@@ -312,84 +238,62 @@
 </footer>
 
 <script>
-<script>
-  const filterBar  = document.getElementById('filterBar');
-  const table      = document.getElementById('writeupTable');
-  const empty      = document.getElementById('emptyState');
-  let   activecat  = 'all';
+// ── Tag label map ──────────────────────────────────────────── //
+const TAG_LABELS = { pwn: 'Pwn', re: 'RE', web: 'Web', forensics: 'Forensics', crypto: 'Crypto' };
 
-  function renderRows(writeups) {
-    // Remove existing placeholder rows
-    table.querySelectorAll('.wt-row').forEach(el => el.remove());
+// ── Load write-ups from JSON index ────────────────────────── //
+let allWriteups = [];
+let activeFilter = 'all';
 
-    if (writeups.length === 0) {
-      // Show placeholder rows since nothing to display yet
-      const cats = ['pwn','re','web','forensics','crypto'];
-      cats.forEach(cat => {
-        const row = document.createElement('div');
-        row.className = 'wt-row placeholder';
-        row.dataset.cat = cat;
-        row.innerHTML = `
-          <span class="wt-challenge">Write-ups coming soon…</span>
-          <span class="wt-event">—</span>
-          <span class="tag ${cat}">${cat.toUpperCase()}</span>
-          <span class="wt-date">—</span>
-        `;
-        table.insertBefore(row, empty);
-      });
-      return;
-    }
+async function loadWriteups() {
+  const container = document.getElementById('writeupRows');
+  try {
+    const res = await fetch('Writeups/index.json');
+    if (!res.ok) throw new Error('Failed to fetch index.json');
+    allWriteups = await res.json();
+    renderRows();
+  } catch (err) {
+    container.innerHTML = `<div class="empty-state" style="display:block"><p>Could not load write-ups.</p></div>`;
+    console.error(err);
+  }
+}
 
-    // Sort by date descending
-    const sorted = [...writeups].sort((a, b) => new Date(b.date) - new Date(a.date));
+function renderRows() {
+  const container = document.getElementById('writeupRows');
+  const emptyState = document.getElementById('emptyState');
 
-    sorted.forEach(wu => {
-      const dateObj   = new Date(wu.date);
-      const formatted = dateObj.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-      const row       = document.createElement('a');
-      row.href        = wu.file;
-      row.className   = 'wt-row';
-      row.dataset.cat = wu.category;
-      row.innerHTML   = `
-        <span class="wt-challenge">${wu.title}</span>
-        <span class="wt-event">${wu.ctf}</span>
-        <span class="tag ${wu.category}">${wu.category}</span>
-        <span class="wt-date">${formatted}</span>
-      `;
-      table.insertBefore(row, empty);
-    });
+  const filtered = activeFilter === 'all'
+    ? allWriteups
+    : allWriteups.filter(w => w.category === activeFilter);
+
+  if (filtered.length === 0) {
+    container.innerHTML = '';
+    emptyState.style.display = 'block';
+    return;
   }
 
-  function applyFilter(cat) {
-    activecat = cat;
-    const rows    = table.querySelectorAll('.wt-row');
-    let   visible = 0;
-    rows.forEach(row => {
-      const match = cat === 'all' || row.dataset.cat === cat;
-      row.style.display = match ? '' : 'none';
-      if (match) visible++;
-    });
-    empty.style.display = visible === 0 ? 'flex' : 'none';
-  }
+  emptyState.style.display = 'none';
+  container.innerHTML = filtered.map(w => `
+    <a href="${w.file}" class="wt-row" data-cat="${w.category}">
+      <span class="wt-challenge">${w.title}</span>
+      <span class="wt-event">${w.event}</span>
+      <span class="tag ${w.category}">${TAG_LABELS[w.category] || w.category}</span>
+      <span class="wt-date">${w.date}</span>
+    </a>
+  `).join('');
+}
 
-  filterBar.addEventListener('click', e => {
-    const btn = e.target.closest('.filter-btn');
-    if (!btn) return;
-    filterBar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    applyFilter(btn.dataset.cat);
-  });
+// ── Category filter ────────────────────────────────────────── //
+document.getElementById('filterBar').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.cat;
+  renderRows();
+});
 
-  // Load write-ups from JSON
-  fetch('writeups.json')
-    .then(r => r.json())
-    .then(writeups => {
-      renderRows(writeups);
-      applyFilter(activecat);
-    })
-    .catch(() => {
-      renderRows([]);
-    });
+loadWriteups();
 </script>
 
 </body>
