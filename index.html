@@ -511,10 +511,15 @@
   fetch('https://corsproxy.io/?url=https://ctftime.org/api/v1/teams/429719/')
     .then(r => r.json())
     .then(data => {
-      // Competitions Entered = number of years with rating data
-      const ratingYears = data.rating ? Object.keys(data.rating) : [];
-      const compCount   = ratingYears.length;
-      document.getElementById('stat-competitions').textContent = compCount || '0';
+// NEW — hit the participations endpoint separately
+fetch('https://corsproxy.io/?url=https://ctftime.org/api/v1/teams/429719/participations/')
+  .then(r => r.json())
+  .then(participations => {
+    document.getElementById('stat-competitions').textContent = participations.length || '0';
+  })
+  .catch(() => {
+    document.getElementById('stat-competitions').textContent = '0';
+  });
 
       const lastYear = ratingYears.sort().slice(-1)[0];
       const rating   = lastYear ? data.rating[lastYear] : null;
