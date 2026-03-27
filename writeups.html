@@ -248,7 +248,7 @@ let activeFilter = 'all';
 async function loadWriteups() {
   const container = document.getElementById('writeupRows');
   try {
-    const res = await fetch('Writeups/index.json');
+    const res = await fetch('writeups.json');
     if (!res.ok) throw new Error('Failed to fetch index.json');
     allWriteups = await res.json();
     renderRows();
@@ -276,9 +276,9 @@ function renderRows() {
   container.innerHTML = filtered.map(w => `
     <a href="${w.file}" class="wt-row" data-cat="${w.category}">
       <span class="wt-challenge">${w.title}</span>
-      <span class="wt-event">${w.event}</span>
+      <span class="wt-event">${w.ctf}</span>
       <span class="tag ${w.category}">${TAG_LABELS[w.category] || w.category}</span>
-      <span class="wt-date">${w.date}</span>
+      <span class="wt-date">${new Date(w.date).toLocaleDateString("en-US",{month:"short",year:"numeric"})}</span>
     </a>
   `).join('');
 }
