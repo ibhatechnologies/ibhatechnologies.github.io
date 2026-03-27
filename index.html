@@ -383,10 +383,10 @@
 
     <!-- Stat bar -->
     <div class="stats fade-up">
-      <div class="stat">
-        <div class="stat-num"><!-- e.g. 12 --><span>—</span></div>
-        <div class="stat-label">Competitions Entered</div>
-      </div>
+<div class="stat">
+  <div class="stat-num"><span id="stat-competitions">—</span></div>
+  <div class="stat-label">Competitions Entered</div>
+</div>
       <div class="stat">
         <div class="stat-num"><span>5</span></div>
         <div class="stat-label">Disciplines</div>
@@ -395,10 +395,10 @@
         <div class="stat-num"><span>4</span></div>
         <div class="stat-label">Team Members</div>
       </div>
-      <div class="stat">
-        <div class="stat-num"><!-- e.g. 8 --><span>—</span></div>
-        <div class="stat-label">Write-Ups Published</div>
-      </div>
+<div class="stat">
+  <div class="stat-num"><span id="stat-writeups">—</span></div>
+  <div class="stat-label">Write-Ups Published</div>
+</div>
     </div>
   </section>
 
@@ -455,6 +455,9 @@
           .then(data => {
             const lastYear = data.rating ? Object.keys(data.rating).sort().slice(-1)[0] : null;
             const rating   = lastYear ? data.rating[lastYear] : null;
+            // Count competitions entered (one per year that has rating data)
+const compCount = data.rating ? Object.values(data.rating).filter(y => y.rating_place || y.rating_points).length : 0;
+document.getElementById('stat-competitions').textContent = compCount > 0 ? compCount : '0';
             document.getElementById('ctftimeBody').innerHTML = `
               <div style="display:flex; gap:2rem; align-items:center; flex-wrap:wrap; width:100%;">
                 ${data.logo ? `<img src="${data.logo}" alt="Team logo" style="height:64px; border-radius:4px;" />` : ''}
@@ -552,6 +555,62 @@
     <a href="https://linkedin.com/company/ibha-technologies" target="_blank" rel="noopener">LinkedIn</a>
   </p>
 </footer>
+
+  <script>
+  fetch('writeups.json')
+    .then(r => r.json())
+    .then(writeups => {
+      // ── 1. Update the Write-Ups Published stat ────────────────
+      document.getElementById('stat-writeups').textContent = writeups.length;
+
+      // ── 2. Populate the recent write-ups preview section ──────
+      const list = document.querySelector('.writeup-list');
+      if (!list) return;
+
+      // Remove placeholder rows
+      list.querySelectorAll('.writeup-row.placeholder').forEach(el => el.remove());
+
+      if (writeups.length === 0) {
+        // Put placeholders back if still nothing to show
+        list.innerHTML = `
+          <div class="writeup-row placeholder">
+            <div class="writeup-meta">
+              <span class="tag pwn">Pwn</span>
+              <span class="writeup-title">Write-up coming soon…</span>
+              <span class="writeup-ctf">Your next CTF</span>
+            </div>
+            <span class="writeup-date">—</span>
+          </div>`;
+        return;
+      }
+
+      // Sort by date descending, take 3 most recent
+      const recent = [...writeups]
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 3);
+
+      recent.forEach(wu => {
+        const dateObj = new Date(wu.date);
+        const formatted = dateObj.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        const row = document.createElement('a');
+        row.href = wu.file;
+        row.className = 'writeup-row';
+        row.innerHTML = `
+          <div class="writeup-meta">
+            <span class="tag ${wu.category}">${wu.category.toUpperCase().replace('FORENSICS','Forensics').replace('CRYPTO','Crypto').replace('PWN','Pwn').replace('WEB','Web').replace('RE','RE')}</span>
+            <span class="writeup-title">${wu.title}</span>
+            <span class="writeup-ctf">${wu.ctf}</span>
+          </div>
+          <span class="writeup-date">${formatted}</span>
+        `;
+        list.appendChild(row);
+      });
+    })
+    .catch(() => {
+      // writeups.json missing or malformed — leave the — and placeholders as-is
+      console.warn('Could not load writeups.json');
+    });
+</script>
 
 </body>
 </html>
