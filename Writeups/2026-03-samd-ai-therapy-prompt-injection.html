@@ -145,6 +145,49 @@
       font-weight: 600;
     }
 
+    /* ── List styling ────────────────────────────────────────── */
+    .wu-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+    }
+
+    .wu-section ul li {
+      display: flex;
+      gap: .75rem;
+      align-items: flex-start;
+      font-size: .875rem;
+      color: var(--text-dim);
+      line-height: 1.75;
+    }
+
+    .wu-section ul li::before {
+      content: '→';
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: .8rem;
+      flex-shrink: 0;
+      margin-top: .15rem;
+    }
+
+    .wu-section ul li strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .wu-section ul li a {
+      color: var(--accent);
+      opacity: .85;
+    }
+
+    .wu-section ul li a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
     /* ── Code blocks ─────────────────────────────────────────── */
     .code-block {
       background: #080d13;
@@ -476,24 +519,25 @@
       </p>
     </section>
 
-<section>
-  <div class="section-label">Disclosure</div>
-  <h2>Responsible Disclosure &amp; Validation</h2>
-  <p>
-    The three vulnerability classes documented in this advisory were validated
-    against three deployed AI therapy products. Each finding was reported to
-    the respective vendor through responsible disclosure channels prior to
-    publication. All three vendors acknowledged the reports; Ibha Technologies
-    received compensation across the disclosures. Vendor names are withheld
-    pending patch timelines. No vendor-specific exploitation details are
-    included in this advisory.
-  </p>
-  <p>
-    Payloads presented in this document illustrate attack <em>structure</em>
-    as observed during testing. They are not verbatim reproduction of
-    working exploits against named products.
-  </p>
-</section>
+    <!-- SECTION: Disclosure ──────────────────────────────────── -->
+    <section class="wu-section fade-up">
+      <p class="wu-section-label">Disclosure</p>
+      <h2>Responsible Disclosure &amp; Validation</h2>
+      <p>
+        The three vulnerability classes documented in this advisory were validated
+        against three deployed AI therapy products. Each finding was reported to
+        the respective vendor through responsible disclosure channels prior to
+        publication. All three vendors acknowledged the reports; Ibha Technologies
+        received compensation across the disclosures. Vendor names are withheld
+        pending patch timelines. No vendor-specific exploitation details are
+        included in this advisory.
+      </p>
+      <p>
+        Payloads presented in this document illustrate attack <em>structure</em>
+        as observed during testing. They are not verbatim reproductions of
+        working exploits against named products.
+      </p>
+    </section>
 
     <hr class="wu-divider" />
 
@@ -963,25 +1007,28 @@ USER INPUT (UNTRUSTED): {user_message}</pre>
         demonstrate failure mode safety before approval.
       </p>
 
-<h3>Tooling &amp; Prior Work</h3>
-<p>
-  Several open-source and commercial tools have emerged to address parts of
-  this attack surface and are worth evaluating:
-</p>
-<ul>
-  <li><strong>Rebuff</strong> — open-source prompt injection detection library
-    with a self-hardening feedback loop.
-    <a href="https://github.com/protectai/rebuff" target="_blank">github.com/protectai/rebuff</a>
-  </li>
-  <li><strong>Lakera Guard</strong> — commercial API for real-time prompt
-    injection and jailbreak detection.
-    <a href="https://www.lakera.ai" target="_blank">lakera.ai</a>
-  </li>
-  <li><strong>Microsoft PyRIT</strong> — red-teaming framework for LLM
-    applications, including injection simulation.
-    <a href="https://github.com/Azure/PyRIT" target="_blank">github.com/Azure/PyRIT</a>
-  </li>
-</ul>
+      <h3>Tooling &amp; Prior Work</h3>
+      <p>
+        Several open-source and commercial tools have emerged to address parts of
+        this attack surface and are worth evaluating:
+      </p>
+      <ul>
+        <li>
+          <strong>Rebuff</strong> — open-source prompt injection detection library
+          with a self-hardening feedback loop.
+          <a href="https://github.com/protectai/rebuff" target="_blank" rel="noopener">github.com/protectai/rebuff</a>
+        </li>
+        <li>
+          <strong>Lakera Guard</strong> — commercial API for real-time prompt
+          injection and jailbreak detection.
+          <a href="https://www.lakera.ai" target="_blank" rel="noopener">lakera.ai</a>
+        </li>
+        <li>
+          <strong>Microsoft PyRIT</strong> — red-teaming framework for LLM
+          applications, including injection simulation.
+          <a href="https://github.com/Azure/PyRIT" target="_blank" rel="noopener">github.com/Azure/PyRIT</a>
+        </li>
+      </ul>
     </section>
 
     <hr class="wu-divider" />
