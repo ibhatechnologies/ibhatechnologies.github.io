@@ -519,6 +519,8 @@
       </p>
     </section>
 
+    <hr class="wu-divider" />
+
     <!-- SECTION: Disclosure ──────────────────────────────────── -->
     <section class="wu-section fade-up">
       <p class="wu-section-label">Disclosure</p>
@@ -1007,30 +1009,33 @@ USER INPUT (UNTRUSTED): {user_message}</pre>
         demonstrate failure mode safety before approval.
       </p>
 
-      <h3>Tooling &amp; Prior Work</h3>
+<h3>Tooling &amp; Prior Work</h3>
       <p>
         Several open-source and commercial tools have emerged to address parts of
         this attack surface and are worth evaluating:
       </p>
-      <ul>
+      <ul class="tool-list">
         <li>
-          <strong>Rebuff</strong> — open-source prompt injection detection library
-          with a self-hardening feedback loop.
-          <a href="https://github.com/protectai/rebuff" target="_blank" rel="noopener">github.com/protectai/rebuff</a>
+          <div class="tool-list-content">
+            <span class="tool-list-name">Rebuff</span>
+            <span class="tool-list-desc">Open-source prompt injection detection library with a self-hardening feedback loop. &nbsp;<a href="https://github.com/protectai/rebuff" target="_blank" rel="noopener">github.com/protectai/rebuff</a></span>
+          </div>
         </li>
         <li>
-          <strong>Lakera Guard</strong> — commercial API for real-time prompt
-          injection and jailbreak detection.
-          <a href="https://www.lakera.ai" target="_blank" rel="noopener">lakera.ai</a>
+          <div class="tool-list-content">
+            <span class="tool-list-name">Lakera Guard</span>
+            <span class="tool-list-desc">Commercial API for real-time prompt injection and jailbreak detection. &nbsp;<a href="https://www.lakera.ai" target="_blank" rel="noopener">lakera.ai</a></span>
+          </div>
         </li>
         <li>
-          <strong>Microsoft PyRIT</strong> — red-teaming framework for LLM
-          applications, including injection simulation.
-          <a href="https://github.com/Azure/PyRIT" target="_blank" rel="noopener">github.com/Azure/PyRIT</a>
+          <div class="tool-list-content">
+            <span class="tool-list-name">Microsoft PyRIT</span>
+            <span class="tool-list-desc">Red-teaming framework for LLM applications, including injection simulation. &nbsp;<a href="https://github.com/Azure/PyRIT" target="_blank" rel="noopener">github.com/Azure/PyRIT</a></span>
+          </div>
         </li>
       </ul>
     </section>
-
+ 
     <hr class="wu-divider" />
 
     <!-- SECTION: Key Takeaway ───────────────────────────────── -->
